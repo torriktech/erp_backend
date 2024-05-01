@@ -30,3 +30,9 @@ pip install -r requirements.txt
 ```
 python manage.py runserver
 ```
+
+# running app after subsequently
+```
+cd erp
+python manage.py runserver
+```
