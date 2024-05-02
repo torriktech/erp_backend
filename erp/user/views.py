@@ -1,7 +1,4 @@
 '''user views'''
-from django.contrib.auth.models import User
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth import authenticate
 from django.contrib.auth import logout
 from django.db import IntegrityError
 from rest_framework.views import APIView
@@ -10,10 +7,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.serializers import Serializer, CharField, ValidationError
-
 # custom functions anc lasses
-from .serializers import UserSerializer, LoginSerializer
+from .serializers import UserSerializer, LoginSerializer, RegisterUserSerializer
 from .models import UserModel
 
 
@@ -25,46 +20,22 @@ class RegisterUser(APIView):
 
     def post(self, request):
         """
-        Create a new user account with basic information.
+        Handles user registration using the serializer for validation and creation.
         """
-        # Validate and create the user account with the required fields
-        username = request.data.get('username')
-        password = request.data.get('password')
-        email = request.data.get('email')
+        serializer = RegisterUserSerializer(
+            data=request.data)  # Initialize serializer with request data
 
-        if not username or not password:
+        if serializer.is_valid():  # Validate the data
+            user = serializer.save()  # Save the user to the database
             return Response(
-                {"error": "Username, password, and email are required."},
-                status=status.HTTP_400_BAD_REQUEST,
+                {"message": "User registered successfully."},
+                status=status.HTTP_201_CREATED,
+                data=user
             )
-
-        # Check if the username or email already exists
-        if User.objects.filter(username=username).exists():
-            return Response(
-                {"error": "Username is already taken."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if User.objects.filter(email=email).exists():
-            return Response(
-                {"error": "Email is already registered."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        # Create the new user
-        user = User.objects.create(
-            username=username,
-            email=email,
-            password=make_password(password),
-        )
-
-        # Create a related UserModel record for additional information
-        User.objects.create(user=user)
-
+        # If the data is invalid, return the validation errors
         return Response(
-            {"message": "User registered successfully."},
-            status=status.HTTP_201_CREATED,
-        )
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST)
 
 
 class LoginUser(ObtainAuthToken):
