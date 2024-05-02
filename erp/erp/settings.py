@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     # custom app
     'core',
-    'user',
+    'user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
@@ -85,6 +85,17 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'erp',
+#        'USER': 'postgres',
+#        'PASSWORD': '',
+#        'HOST': 'localhost',
+#        'PORT': 5432,
+#    }
+# }   
 
 
 # Password validation
