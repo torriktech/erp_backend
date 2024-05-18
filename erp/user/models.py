@@ -19,6 +19,7 @@ class UserModel(models.Model):
     mobile_num = models.CharField(max_length=11)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    address = models.CharField(max_length=150)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

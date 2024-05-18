@@ -41,7 +41,11 @@ INSTALLED_APPS = [
     'rest_framework',
     # custom app
     'core',
-    'user.apps.UserConfig'
+    'user.apps.UserConfig',
+    'procurement',
+    'project',
+    'purchase',
+    'supplier',
 ]
 
 MIDDLEWARE = [
