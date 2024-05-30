@@ -1,6 +1,16 @@
 """purchase-order models"""
 from django.db import models
 from procurement.models import Procurement
+from django.contrib.auth.models import User
+
+
+STATUS_CHOICES = [
+    ('pending', 'pending'),
+    ('cancel', 'cancel'),
+    ('approved', 'approved'),
+    ('completed', 'completed'),
+    ('on-progress', 'on-Progress'),
+]
 
 
 class PurchaseOrder(models.Model):
@@ -24,6 +34,11 @@ class PurchaseOrder(models.Model):
     payment_due_date = models.DateField()
     shipping_method = models.CharField(max_length=100)
     delivery_address = models.TextField()
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="created_by"
+    )
 
     def __str__(self):
         return f"PO-{self.id}"
@@ -44,8 +59,14 @@ class Approval(models.Model):
         PurchaseOrder,
         on_delete=models.CASCADE
     )
-    status = models.CharField(max_length=20)
-    approver_name = models.CharField(max_length=100)
+    status = models.CharField(max_length=20,
+                              choices=STATUS_CHOICES,
+                              default='pending')
+    approver_name = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="approved_by"
+    )
     approval_date = models.DateField()
 
     def __str__(self):
@@ -64,14 +85,22 @@ class Delivery(models.Model):
     - receiving_personnel: Personnel who received the delivery
     """
 
-    purchase_order = models.OneToOneField(PurchaseOrder, on_delete=models.CASCADE)
-    status = models.CharField(max_length=20)
+    purchase_order = models.OneToOneField(
+        PurchaseOrder, on_delete=models.CASCADE)
+    status = models.CharField(max_length=20,
+                              choices=STATUS_CHOICES,
+                              default='pending')
     received_quantity = models.DecimalField(max_digits=10, decimal_places=2)
     received_date = models.DateField()
-    receiving_personnel = models.CharField(max_length=100)
+    receiving_personnel = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="receiving_personnel"
+    )
 
     def __str__(self):
         return self.status
+
 
 class Invoice(models.Model):
     """
@@ -85,16 +114,19 @@ class Invoice(models.Model):
     - payment_status: Payment status of the invoice
     - payment_date: Date when payment was made for the invoice
     """
-
-    purchase_order = models.OneToOneField(PurchaseOrder, on_delete=models.CASCADE)
+    purchase_order = models.OneToOneField(
+        PurchaseOrder, on_delete=models.CASCADE)
     number = models.CharField(max_length=50)
     date = models.DateField()
     amount = models.DecimalField(max_digits=15, decimal_places=2)
-    payment_status = models.CharField(max_length=20)
+    payment_status = models.CharField(max_length=20,
+                                      choices=STATUS_CHOICES,
+                                      default='pending')
     payment_date = models.DateField()
 
     def __str__(self):
         return self.number
+
 
 class QualityControl(models.Model):
     """
@@ -106,14 +138,20 @@ class QualityControl(models.Model):
     - inspection_date: Date of the inspection
     - quality_control_personnel: Personnel responsible for quality control
     """
-
+    name = models.CharField(max_length=100)
+    status = models.CharField(max_length=20,
+                              choices=STATUS_CHOICES,
+                              default='pending')
     purchase_order = models.OneToOneField(
         PurchaseOrder,
         on_delete=models.CASCADE
     )
-    status = models.CharField(max_length=20)
     inspection_date = models.DateField()
-    quality_control_personnel = models.CharField(max_length=100)
+    quality_control_personnel = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="control_manager"
+    )
 
     def __str__(self):
         return self.status
@@ -132,7 +170,8 @@ class Contract(models.Model):
     - renewal_date: Date for contract renewal
     """
 
-    purchase_order = models.OneToOneField(PurchaseOrder, on_delete=models.CASCADE)
+    purchase_order = models.OneToOneField(
+        PurchaseOrder, on_delete=models.CASCADE)
     number = models.CharField(max_length=50)
     terms = models.TextField()
     start_date = models.DateField()

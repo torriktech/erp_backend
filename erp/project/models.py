@@ -5,8 +5,9 @@ from django.db import models
 class Project(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
+        ('approved', 'Approved'),
         ('completed', 'Completed'),
-        ('on-progress', 'On Progress'),
+        ('on-progress', 'On-Progress'),
     ]
 
     name = models.CharField(max_length=100)
@@ -15,9 +16,15 @@ class Project(models.Model):
                               default='pending')
     manager = models.ForeignKey(User,
                                 on_delete=models.CASCADE,
-                                related_name="managed_projects")
+                                related_name="project_manager")
     document = models.FileField(upload_to='attachments/')
-    client_name = models.CharField(max_length=100)
+    client = models.ForeignKey(
+        'UserModel',
+        on_delete=models.CASCADE,
+        related_name='client_projects',
+        blank=True,
+        null=True
+    )
     working_time = models.DateTimeField(auto_now_add=True)
     created = models.DateTimeField(auto_now_add=True)
  
@@ -26,9 +33,16 @@ class Project(models.Model):
 
 
 class ProjectOperation(models.Model):
-    project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name="operations")
+    project = models.OneToOneField(
+        Project,
+        on_delete=models.CASCADE,
+        related_name="operations"
+    )
     sites = models.CharField(max_length=200)
-    milestones = models.ManyToManyField('Milestone', related_name="project_operations")
+    milestones = models.ManyToManyField(
+        'Milestone',
+        related_name="project_operations"
+    )
     progress_report = models.TextField()
 
     def __str__(self):
