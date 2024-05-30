@@ -1,6 +1,15 @@
 """project management controller"""
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
+# custom urls
+from user.permissions import (
+    # IsAdministrator,
+    # IsClient,
+    # IsStaff,
+    IsAdminOrClient
+)
 from .models import Project, ProjectOperation, Task, Milestone
 from .serializers import (
     ProjectSerializer,
@@ -24,6 +33,7 @@ class ProjectDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated, IsAdminOrClient]
 
 
 class ProjectOperationCreateAPIView(generics.CreateAPIView):
@@ -40,7 +50,8 @@ class ProjectOperationCreateAPIView(generics.CreateAPIView):
 
 class ProjectOperationDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
-    API view for retrieving, updating, or deleting a specific project operation.
+    API view for retrieving, updating, or deleting
+    a specific project operation.
     """
     queryset = ProjectOperation.objects.all()
     serializer_class = ProjectOperationSerializer

@@ -1,5 +1,6 @@
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.db import models
+from django.conf import settings
 
 
 class Project(models.Model):
@@ -14,12 +15,12 @@ class Project(models.Model):
     status = models.CharField(max_length=20,
                               choices=STATUS_CHOICES,
                               default='pending')
-    manager = models.ForeignKey(User,
+    manager = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,
                                 related_name="project_manager")
     document = models.FileField(upload_to='attachments/')
     client = models.ForeignKey(
-        'UserModel',
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='client_projects',
         blank=True,
@@ -58,8 +59,10 @@ class Task(models.Model):
     project = models.ForeignKey(Project,
                                 on_delete=models.CASCADE,
                                 related_name="tasks")
-    assigned_to = models.ManyToManyField(User, related_name="assigned_tasks")
-    client_name = models.CharField(max_length=100)
+    assigned_to = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="assigned_tasks"
+    )
     hours_planned = models.DateTimeField()
     deadline = models.DateTimeField()
     created = models.DateTimeField(auto_now_add=True)

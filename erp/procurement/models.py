@@ -9,10 +9,11 @@ class Procurement(models.Model):
     workers_payment_request = models.CharField(max_length=20)
     stores_request = models.CharField(max_length=20)
     inventory = models.CharField(max_length=20)
-    supplier = models.ForeignKey(Supplier,
-                                 on_delete=models.CASCADE,
-                                 related_name='procurements'
-                                )
+    supplier = models.ForeignKey(
+        Supplier,
+        on_delete=models.CASCADE,
+        related_name='procurements'
+    )
     document = models.FileField(upload_to='attachments/')
     project = models.ForeignKey(
         Project,

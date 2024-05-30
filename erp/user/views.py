@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authtoken.models import Token
+from django.contrib.auth import login
 from rest_framework.authtoken.views import ObtainAuthToken
 # custom functions anc lasses
 from .serializers import UserSerializer, LoginSerializer, RegisterUserSerializer
@@ -58,13 +59,15 @@ class LoginUser(ObtainAuthToken):
             )
 
         user = serializer.validated_data["user"]
+     
 
         if user is None:
             return Response(
                 {"error": "Invalid username or password"},
                 status=status.HTTP_401_UNAUTHORIZED
             )
-
+        
+        login(request, user)
         # Get or create the token for the authenticated user
         token, _ = Token.objects.get_or_create(user=user)
 
@@ -141,7 +144,11 @@ class LogoutUser(APIView):
         Logs out the current user by deleting the authentication token.
         """
         # Delete the authentication token to log out
-        request.user.auth_token.delete()
+        request.user.token.delete()
+
+        token_key = request.auth.key
+        token = Token.objects.get(key=token_key)
+        token.delete()
         # Perform Django's logout operation
         logout(request)
         return Response({"message": "User logged out successfully"},

@@ -14,6 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
         '''a meta class for the user serializer'''
         fields = '__all__'
         model = UserModel
+        extra_kwargs = {'password': {'write_only': True}}
 
 
 class RegisterUserSerializer(serializers.Serializer):

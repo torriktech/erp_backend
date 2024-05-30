@@ -1,7 +1,7 @@
 """purchase-order models"""
 from django.db import models
 from procurement.models import Procurement
-from django.contrib.auth.models import User
+from django.conf import settings
 
 
 STATUS_CHOICES = [
@@ -35,7 +35,7 @@ class PurchaseOrder(models.Model):
     shipping_method = models.CharField(max_length=100)
     delivery_address = models.TextField()
     created_by = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="created_by"
     )
@@ -63,13 +63,18 @@ class Approval(models.Model):
                               choices=STATUS_CHOICES,
                               default='pending')
     approver_name = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="approved_by"
     )
     approval_date = models.DateField()
 
     def __str__(self):
+        """_str_
+
+        Returns:
+            _type_: return the status
+        """
         return self.status
 
 
@@ -93,7 +98,7 @@ class Delivery(models.Model):
     received_quantity = models.DecimalField(max_digits=10, decimal_places=2)
     received_date = models.DateField()
     receiving_personnel = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="receiving_personnel"
     )
@@ -148,7 +153,7 @@ class QualityControl(models.Model):
     )
     inspection_date = models.DateField()
     quality_control_personnel = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="control_manager"
     )
