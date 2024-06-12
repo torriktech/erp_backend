@@ -7,13 +7,16 @@ from project.models import Project
 class UserModel(AbstractUser):
     """
     This model extends the default Django user with additional information
-    like mobile number, first name, last name, email, and creation date.
     """
 
     ROLE_CHOICES = (
         ('administrator', 'administrator'),
         ('client', 'client'),
-        ('staff', 'Staff'),
+        ('staff', 'staff'),
+        ('manager', 'manager'),
+        ('contractor', 'contractor'),
+        ('sub_contractor', 'sub_contractor'),
+        ('project_head', 'project_head'),
     )
 
     # Create a one-to-one relationship with Django's default User model
@@ -23,12 +26,12 @@ class UserModel(AbstractUser):
         related_name='profile',
     )
 
-    mobile_num = models.CharField(max_length=11)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     address = models.CharField(max_length=150)
     roles = models.CharField(max_length=15, blank=True, choices=ROLE_CHOICES)
     job_role = models.CharField(max_length=20)
+    company_name = models.CharField(max_length=20, blank=True)
     contact_email = models.EmailField()
     contact_phone = models.CharField(max_length=20)
     address = models.TextField()
@@ -38,11 +41,11 @@ class UserModel(AbstractUser):
     zip_code = models.CharField(max_length=20)
     created = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='images/')
-    projects = models.ManyToManyField(
-        Project,
-        related_name='users',
-        blank=True
-    )
+    # projects = models.ManyToManyField(
+    #     Project,
+    #     related_name='users',
+    #     blank=True
+    # )
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -52,6 +55,22 @@ class UserModel(AbstractUser):
     def is_administrator(self):
         '''Check if the user is an administrator'''
         return self.roles == 'administrator'
+    
+    def is_project_head(self):
+        '''Check if the user is an head of project'''
+        return self.roles == 'project_head'
+    
+    def is_contractor(self):
+        '''Check if the user is an contractor'''
+        return self.roles == 'contractor'
+    
+    def is_sub_contractor(self):
+        '''Check if the user is an sub contractor'''
+        return self.roles == "sub_contractor"
+    
+    def is_manager(self):
+        """check if the user is manager"""
+        return self.roles == "manager"
 
     def is_client(self):
         '''Check if the user is a client'''
@@ -67,6 +86,7 @@ class UserModel(AbstractUser):
             return True  # Administrators have all permissions
         # Add more specific permission checks based on roles if needed
         return False
+    
     class Meta:
         '''meta validations'''
         verbose_name = 'User'

@@ -25,6 +25,24 @@ class IsStaff(BasePermission):
         return request.user.is_authenticated and request.user.is_staff()
 
 
+class IsContractor(BasePermission):
+    """
+    Custom permission to only allow contractor members.
+    """
+    def has_permission(self, request, view):
+        return request.user.is_authenticated \
+            and request.user.is_contractor()
+    
+
+class IsManager(BasePermission):
+    """
+    Custom permission to only allow manager of project.
+    """
+    def has_permission(self, request, view):
+        return request.user.is_authenticated \
+            and request.user.is_manager()
+
+
 class IsAdminOrClient(BasePermission):
     """
     Custom permission to allow only administrators
