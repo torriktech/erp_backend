@@ -89,3 +89,5 @@ class LoginView(TokenObtainPairView):
 #             else:
 #                 return Response({"detail": "User account is inactive."}, status=status.HTTP_401_UNAUTHORIZED)
 #         return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
+

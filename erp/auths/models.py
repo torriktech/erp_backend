@@ -66,3 +66,4 @@ class Employee(models.Model):
         Payroll,
         on_delete=models.CASCADE,
         related_name="employee_payroll")
+    

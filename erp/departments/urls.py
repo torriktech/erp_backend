@@ -46,3 +46,4 @@ urlpatterns = [
     path('positions/<int:pk>/', PositionRetrieveUpdateDestroyView.as_view(),
          name='position-retrieve-update-destroy'),
 ]
+
