@@ -40,10 +40,11 @@ urlpatterns = [
     path('emp-dept/<int:department_id>/',
          EmployeeListByDepartmentView.as_view(),
          name='employees-by-department'),
-     # Positions
+    # Positions
     path('positions/', PositionListCreateView.as_view(),
          name='position-list-create'),
     path('positions/<int:pk>/', PositionRetrieveUpdateDestroyView.as_view(),
          name='position-retrieve-update-destroy'),
 ]
+
 
