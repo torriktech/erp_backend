@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authtoken.models import Token
 from .serializers import (
     CustomUserSerializer,
@@ -53,22 +54,38 @@ class CompanyProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user.company_profile
 
 
-class LoginView(APIView):
-    """login view"""
-    permission_classes = [permissions.AllowAny]
+class CustomTokenObtainPairView(TokenObtainPairView):
+    """login user"""
+    serializer_class = CustomUserSerializer
 
+
+class LoginView(TokenObtainPairView):
+    """
+    Login view using SimpleJWT.
+    """
     def post(self, request, *args, **kwargs):
-        """post for login"""
-        username = request.data.get('username')
-        password = request.data.get('password')
-        print(f"Attempting to authenticate user: {username}")  # Debug print
-        user = authenticate(username=username, password=password)
-        if user:
-            if user.is_active:
-                token, created = Token.objects.get_or_create(user=user)
-                return Response({
-                    'token': token.key,
-                }, status=status.HTTP_200_OK)
-            else:
-                return Response({"detail": "User account is inactive."}, status=status.HTTP_401_UNAUTHORIZED)
-        return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        response = super().post(request, *args, **kwargs)
+        return Response({
+            'refresh': response.data['refresh'],
+            'access': response.data['access'],
+        }, status=status.HTTP_200_OK)
+    
+# class LoginView(APIView):
+#     """login view"""
+#     permission_classes = [permissions.AllowAny]
+
+#     def post(self, request, *args, **kwargs):
+#         """post for login"""
+#         username = request.data.get('username')
+#         password = request.data.get('password')
+#         print(f"Attempting to authenticate user: {username}")  # Debug print
+#         user = authenticate(username=username, password=password)
+#         if user:
+#             if user.is_active:
+#                 token, created = Token.objects.get_or_create(user=user)
+#                 return Response({
+#                     'token': token.key,
+#                 }, status=status.HTTP_200_OK)
+#             else:
+#                 return Response({"detail": "User account is inactive."}, status=status.HTTP_401_UNAUTHORIZED)
+#         return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
