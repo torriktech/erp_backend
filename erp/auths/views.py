@@ -61,10 +61,14 @@ class LoginView(APIView):
         """post for login"""
         username = request.data.get('username')
         password = request.data.get('password')
+        print(f"Attempting to authenticate user: {username}")  # Debug print
         user = authenticate(username=username, password=password)
         if user:
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({
-                'token': token.key,
-            }, status=status.HTTP_200_OK)
+            if user.is_active:
+                token, created = Token.objects.get_or_create(user=user)
+                return Response({
+                    'token': token.key,
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({"detail": "User account is inactive."}, status=status.HTTP_401_UNAUTHORIZED)
         return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
