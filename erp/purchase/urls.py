@@ -1,42 +1,27 @@
 """purchase order urls """
 from django.urls import path
 from .views import (
-    PurchaseOrderListCreateAPIView,
-    PurchaseOrderDetailAPIView,
-    ApprovalDetailAPIView,
-    DeliveryDetailAPIView,
-    InvoiceDetailAPIView,
-    QualityControlDetailAPIView,
-    ContractDetailAPIView,
-    DocumentationDetailAPIView
+    RequisitionCreateView,
+    RequisitionApproveView,
+    PurchaseOrderListView,
+    RequisitionItemCreateView,
+    RequisitionItemListView
 )
 
 urlpatterns = [
+    path('requisitions/',
+         RequisitionCreateView.as_view(),
+         name='requisition-create'),
+    path('requisitions/<int:requisition_id>/approve/',
+         RequisitionApproveView.as_view(),
+         name='requisition-approve'),
     path('purchase-orders/',
-         PurchaseOrderListCreateAPIView.as_view(),
-         name='purchaseorder-list-create'),
-    path('purchase-orders/<int:pk>/',
-         PurchaseOrderDetailAPIView.as_view(),
-         name='purchaseorder-detail'),
-
-    path('approvals/<int:pk>/',
-         ApprovalDetailAPIView.as_view(),
-         name='approval-detail'),
-    path('deliveries/<int:pk>/',
-         DeliveryDetailAPIView.as_view(),
-         name='delivery-detail'),
-    path('invoices/<int:pk>/',
-         InvoiceDetailAPIView.as_view(),
-         name='invoice-detail'),
-    path('quality-controls/<int:pk>/',
-         QualityControlDetailAPIView.as_view(),
-         name='qualitycontrol-detail'
-         ),
-    path('contracts/<int:pk>/',
-         ContractDetailAPIView.as_view(),
-         name='contract-detail'
-         ),
-    path('documentations/<int:pk>/',
-         DocumentationDetailAPIView.as_view(),
-         name='documentation-detail'),
+         PurchaseOrderListView.as_view(),
+         name='purchase-order-list'),
+    path('requisition-items/',
+         RequisitionItemCreateView.as_view(),
+         name='requisition-item-create'),
+    path('requisition-items/list/',
+         RequisitionItemListView.as_view(),
+         name='requisition-item-list'),
 ]

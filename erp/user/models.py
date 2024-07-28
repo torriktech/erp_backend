@@ -1,8 +1,7 @@
 '''user model'''
 from django.db import models
 from django.contrib.auth.models import User, AbstractUser
-from project.models import Project
-
+from django.conf import settings
 
 class UserModel(AbstractUser):
     """
@@ -20,11 +19,9 @@ class UserModel(AbstractUser):
     )
 
     # Create a one-to-one relationship with Django's default User model
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name='profile',
-    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE)
 
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)

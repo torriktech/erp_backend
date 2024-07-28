@@ -1,7 +1,9 @@
 """site model definition"""
-from django.conf import settings
+# from django.conf import settings
 from django.db import models
-from project.models import ProjectOperation
+from auths.models import CustomUser
+from project.models import Project
+from cloudinary.models import CloudinaryField
 
 
 class SiteInspection(models.Model):
@@ -12,17 +14,14 @@ class SiteInspection(models.Model):
     sitename = models.CharField(max_length=255)
     stage = models.CharField(max_length=255)
     remark = models.TextField()
+    image = CloudinaryField('image', blank=True, null=True)
     inspection_officer = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        related_name="assigned_tasks"
+        CustomUser,
+        related_name="site_inspections"
     )
-    image = models.ImageField(
-        upload_to='site_inspections/',
-        blank=True,
-        null=True
-    )
-    project_operation = models.ForeignKey(
-        ProjectOperation,
+    image = CloudinaryField('image', blank=True, null=True)
+    project = models.ForeignKey(
+        Project,
         on_delete=models.CASCADE,
         related_name="inspections"
     )

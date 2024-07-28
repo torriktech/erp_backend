@@ -1,89 +1,207 @@
-"""project management controller"""
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import generics
+from .models import Project, WorkSchedule, Details, Task, ProjectIssues
+from .serializers import ProjectSerializer, WorkScheduleSerializer, DetailsSerializer, TaskSerializer, ProjectIssuesSerializer
 
-# custom urls
-from user.permissions import (
-    # IsAdministrator,
-    # IsClient,
-    # IsStaff,
-    IsAdminOrClient
-)
-from .models import Project, ProjectOperation, Task, Milestone
-from .serializers import (
-    ProjectSerializer,
-    ProjectOperationSerializer,
-    TaskSerializer,
-    MilestoneSerializer
-)
 
-    
-class ProjectListCreateAPIView(generics.ListCreateAPIView):
+class ProjectListView(generics.ListAPIView):
     """
-    API view for listing all projects or creating a new project.
+    List all projects.
     """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
 
-class ProjectDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ProjectCreateView(generics.CreateAPIView):
     """
-    API view for retrieving, updating, or deleting a specific project.
+    Create a new project.
     """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated, IsAdminOrClient]
 
 
-class ProjectOperationCreateAPIView(generics.CreateAPIView):
+class ProjectDetailView(generics.RetrieveAPIView):
     """
-    API view for creating a new project operation.
+    Retrieve a single project instance.
     """
-    serializer_class = ProjectOperationSerializer
-
-    def perform_create(self, serializer):
-        project_id = self.request.data.get('project_id')
-        project = Project.objects.get(id=project_id)
-        serializer.save(project=project)
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
 
 
-class ProjectOperationDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class ProjectUpdateView(generics.UpdateAPIView):
     """
-    API view for retrieving, updating, or deleting
-    a specific project operation.
+    Update a project instance.
     """
-    queryset = ProjectOperation.objects.all()
-    serializer_class = ProjectOperationSerializer
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
 
 
-class TaskListCreateAPIView(generics.ListCreateAPIView):
+class ProjectDeleteView(generics.DestroyAPIView):
     """
-    API view for listing all tasks or creating a new task.
+    Delete a project instance.
+    """
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+
+
+# WorkSchedule Views
+class WorkScheduleListView(generics.ListAPIView):
+    """
+    List all work schedules.
+    """
+    queryset = WorkSchedule.objects.all()
+    serializer_class = WorkScheduleSerializer
+
+
+class WorkScheduleCreateView(generics.CreateAPIView):
+    """
+    Create a new work schedule.
+    """
+    queryset = WorkSchedule.objects.all()
+    serializer_class = WorkScheduleSerializer
+
+
+class WorkScheduleDetailView(generics.RetrieveAPIView):
+    """
+    Retrieve a single work schedule instance.
+    """
+    queryset = WorkSchedule.objects.all()
+    serializer_class = WorkScheduleSerializer
+
+
+class WorkScheduleUpdateView(generics.UpdateAPIView):
+    """
+    Update a work schedule instance.
+    """
+    queryset = WorkSchedule.objects.all()
+    serializer_class = WorkScheduleSerializer
+
+
+class WorkScheduleDeleteView(generics.DestroyAPIView):
+    """
+    Delete a work schedule instance.
+    """
+    queryset = WorkSchedule.objects.all()
+    serializer_class = WorkScheduleSerializer
+
+
+# Details Views
+class DetailsListView(generics.ListAPIView):
+    """
+    List all details.
+    """
+    queryset = Details.objects.all()
+    serializer_class = DetailsSerializer
+
+
+class DetailsCreateView(generics.CreateAPIView):
+    """
+    Create new details.
+    """
+    queryset = Details.objects.all()
+    serializer_class = DetailsSerializer
+
+
+class DetailsDetailView(generics.RetrieveAPIView):
+    """
+    Retrieve a single details instance.
+    """
+    queryset = Details.objects.all()
+    serializer_class = DetailsSerializer
+
+
+class DetailsUpdateView(generics.UpdateAPIView):
+    """
+    Update a details instance.
+    """
+    queryset = Details.objects.all()
+    serializer_class = DetailsSerializer
+
+
+class DetailsDeleteView(generics.DestroyAPIView):
+    """
+    Delete a details instance.
+    """
+    queryset = Details.objects.all()
+    serializer_class = DetailsSerializer
+
+
+# Task Views
+class TaskListView(generics.ListAPIView):
+    """
+    List all tasks.
     """
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
 
-class TaskDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class TaskCreateView(generics.CreateAPIView):
     """
-    API view for retrieving, updating, or deleting a specific task.
+    Create a new task.
     """
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
 
-class MilestoneListCreateAPIView(generics.ListCreateAPIView):
+class TaskDetailView(generics.RetrieveAPIView):
     """
-    API view for listing all milestones or creating a new milestone.
+    Retrieve a single task instance.
     """
-    queryset = Milestone.objects.all()
-    serializer_class = MilestoneSerializer
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
 
 
-class MilestoneDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class TaskUpdateView(generics.UpdateAPIView):
     """
-    API view for retrieving, updating, or deleting a specific milestone.
+    Update a task instance.
     """
-    queryset = Milestone.objects.all()
-    serializer_class = MilestoneSerializer
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+
+class TaskDeleteView(generics.DestroyAPIView):
+    """
+    Delete a task instance.
+    """
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+
+# ProjectIssues Views
+class ProjectIssuesListView(generics.ListAPIView):
+    """
+    List all project issues.
+    """
+    queryset = ProjectIssues.objects.all()
+    serializer_class = ProjectIssuesSerializer
+
+
+class ProjectIssuesCreateView(generics.CreateAPIView):
+    """
+    Create a new project issue.
+    """
+    queryset = ProjectIssues.objects.all()
+    serializer_class = ProjectIssuesSerializer
+
+
+class ProjectIssuesDetailView(generics.RetrieveAPIView):
+    """
+    Retrieve a single project issue instance.
+    """
+    queryset = ProjectIssues.objects.all()
+    serializer_class = ProjectIssuesSerializer
+
+
+class ProjectIssuesUpdateView(generics.UpdateAPIView):
+    """
+    Update a project issue instance.
+    """
+    queryset = ProjectIssues.objects.all()
+    serializer_class = ProjectIssuesSerializer
+
+
+class ProjectIssuesDeleteView(generics.DestroyAPIView):
+    """
+    Delete a project issue instance.
+    """
+    queryset = ProjectIssues.objects.all()
+    serializer_class = ProjectIssuesSerializer

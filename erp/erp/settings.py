@@ -40,16 +40,23 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    # 'rest_framework.authtoken',
     # custom app
-    'core',
+    'auths',
     'user.apps.UserConfig',
-    'procurement',
     'project',
     'purchase',
+    'budget',
+    'payroll',
     'bill_of_quantity',
     'sites',
-    'inventory',
-    'materials',
+    'items',
+    'departments',
+    'supplier',
+    'category',
+    'clients',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -62,11 +69,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-AUTH_USER_MODEL = 'user.UserModel'
+# AUTH_USER_MODEL = 'user.UserModel'
+AUTH_USER_MODEL = 'auths.CustomUser'
+
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ],
 }
 
@@ -94,24 +106,24 @@ WSGI_APPLICATION = 'erp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'erp',
-#        'USER': 'postgres',
-#        'PASSWORD': '',
-#        'HOST': 'localhost',
-#        'PORT': 5432,
-#    }
-# }   
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': 'erp',
+       'USER': 'apple',
+       'PASSWORD': '',
+       'HOST': 'localhost',
+       'PORT': 5432,
+   }
+}  
+# DATABASE_URL="postgresql://apple:@localhost:5432/asher_test?schema=public"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -167,3 +179,11 @@ CORS_ALLOW_HEADERS = (
 )
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'your_cloud_name',
+    'API_KEY': os.environ.get('CLOUDINARY_API'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET')
+}
