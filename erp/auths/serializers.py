@@ -4,6 +4,7 @@ from departments.serializers import DepartmentSerializer
 from .models import CustomUser, CompanyProfile, Employee
 
 
+
 class CustomUserSerializer(serializers.ModelSerializer):
     """
     Serializer for CustomUser model.
@@ -14,8 +15,12 @@ class CustomUserSerializer(serializers.ModelSerializer):
         """meta data"""
         model = CustomUser
         fields = "__all__"
-        extra_kwargs = {'password': {'write_only': True}}
-
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'groups': {'required': False},
+            'user_permissions': {'required': False},
+        }
+        
     def create(self, validated_data):
         """
         Create a new CustomUser with hashed password.
