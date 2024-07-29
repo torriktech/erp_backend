@@ -16,6 +16,15 @@ import os
 from dotenv import load_dotenv
 # Load environment variables from file
 load_dotenv()
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+cloudinary.config( 
+    cloud_name=os.environ.get('CLOUDINARY_NAME', default=''),
+    api_key=os.environ.get('CLOUDINARY_API_KEY', default=''),
+    api_secret=os.environ.get('CLOUDINARY_SECRET', default="")
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -200,10 +209,11 @@ CORS_ALLOW_HEADERS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_NAME', default=''),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY', default=''),
     'API_SECRET': os.environ.get('CLOUDINARY_SECRET', default="")
 }
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
