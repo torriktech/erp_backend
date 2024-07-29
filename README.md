@@ -1,5 +1,9 @@
 # erp_backend
 
+## Pre-Requisite
+1. Python 3.9 above
+2. create a .env file and use the sample.env to populate your enviromental variables in the create .env file 
+3. postgres 15 and ealier version
 
 # First Time installations
 ## create a virtual enviroment

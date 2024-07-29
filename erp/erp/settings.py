@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+from dotenv import load_dotenv
+# Load environment variables from file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -133,9 +136,9 @@ WSGI_APPLICATION = 'erp.wsgi.application'
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'erp',
-       'USER': 'apple',
-       'PASSWORD': '',
+       'NAME': os.environ.get('DB_NAME', default=''),
+       'USER': os.environ.get('DB_USER', default=''),
+       'PASSWORD': os.environ.get('DB_USER', default=''),
        'HOST': 'localhost',
        'PORT': 5432,
    }
@@ -200,7 +203,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'your_cloud_name',
-    'API_KEY': os.environ.get('CLOUDINARY_API'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET')
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_NAME', default=''),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', default=''),
+    'API_SECRET': os.environ.get('CLOUDINARY_SECRET', default="")
 }
