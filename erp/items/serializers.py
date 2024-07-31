@@ -12,7 +12,6 @@ class ItemSerializer(serializers.ModelSerializer):
     """
     category = CategorySerializer(read_only=True)
 
-
     class Meta:
         """
         Meta class to specify the model and fields to
