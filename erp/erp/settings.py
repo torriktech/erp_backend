@@ -148,10 +148,11 @@ DATABASES = {
        'NAME': os.environ.get('DB_NAME', default=''),
        'USER': os.environ.get('DB_USER', default=''),
        'PASSWORD': os.environ.get('DB_USER', default=''),
-       'HOST': 'localhost',
-       'PORT': 5432,
+       'HOST': os.environ.get('DB_HOST', default='localhost'),
+       'PORT':  os.environ.get('DB_PORT', default=5432),
    }
 }  
+# DB_HOST
 # DATABASE_URL="postgresql://apple:@localhost:5432/asher_test?schema=public"
 
 # Password validation

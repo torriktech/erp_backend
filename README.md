@@ -40,3 +40,23 @@ python manage.py runserver
 cd erp
 python manage.py runserver
 ```
+
+
+
+## to spin up docker build for the app using docker 
+
+```
+docker-compose up -d --build
+```
+### to run migrations on docker
+```
+docker-compose exec web python manage.py migrate --noinput
+```
+### to remove docker images
+```
+docker-compose down -v
+```
+### check for logs
+```
+docker-compose logs -f
+```

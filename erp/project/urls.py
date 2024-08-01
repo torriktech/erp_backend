@@ -4,22 +4,24 @@ from .views import (
     ProjectUpdateView, ProjectDeleteView,
     WorkScheduleListView, WorkScheduleCreateView, WorkScheduleDetailView, 
     WorkScheduleUpdateView, WorkScheduleDeleteView,
-    DetailsListView, DetailsCreateView, DetailsDetailView, DetailsUpdateView, DetailsDeleteView,
-    TaskListView, TaskCreateView, TaskDetailView, TaskUpdateView, TaskDeleteView,
+    DetailsListView, DetailsCreateView, DetailsDetailView, DetailsUpdateView,
+    DetailsDeleteView, DetailsListByProjectView,
+    TaskListView, TaskCreateView, TaskDetailView,
+    TaskUpdateView, TaskDeleteView, TaskListByProjectView,
     ProjectIssuesListView, ProjectIssuesCreateView, ProjectIssuesDetailView, ProjectIssuesUpdateView, ProjectIssuesDeleteView
 )
 
 urlpatterns = [
     # Project URLs
-    path('projects/',
+    path('',
          ProjectListView.as_view(), name='project-list'),
-    path('projects/create/',
+    path('create/',
          ProjectCreateView.as_view(), name='project-create'),
-    path('projects/<int:pk>/',
+    path('detailed/<int:pk>/',
          ProjectDetailView.as_view(), name='project-detail'),
-    path('projects/<int:pk>/update/',
+    path('update/<int:pk>/',
          ProjectUpdateView.as_view(), name='project-update'),
-    path('projects/<int:pk>/delete/',
+    path('delete/<int:pk>/',
          ProjectDeleteView.as_view(), name='project-delete'),
 
     # WorkSchedule URLs
@@ -39,18 +41,19 @@ urlpatterns = [
          DetailsCreateView.as_view(), name='details-create'),
     path('details/<int:pk>/',
          DetailsDetailView.as_view(), name='details-detail'),
-    path('details/<int:pk>/update/',
+    path('details/update/<int:pk>/',
          DetailsUpdateView.as_view(), name='details-update'),
-    path('details/<int:pk>/delete/',
+    path('details/delete/<int:pk>/',
          DetailsDeleteView.as_view(), name='details-delete'),
-
+    path('details/project/<int:project_id>/', DetailsListByProjectView.as_view(), name='details-list-by-project'),
     # Task URLs
     path('tasks/', TaskListView.as_view(), name='task-list'),
     path('tasks/create/', TaskCreateView.as_view(), name='task-create'),
     path('tasks/<int:pk>/', TaskDetailView.as_view(), name='task-detail'),
-    path('tasks/<int:pk>/update/', TaskUpdateView.as_view(), name='task-update'),
-    path('tasks/<int:pk>/delete/', TaskDeleteView.as_view(), name='task-delete'),
-
+    path('tasks/update/<int:pk>/', TaskUpdateView.as_view(), name='task-update'),
+    path('tasks/delete/<int:pk>/', TaskDeleteView.as_view(), name='task-delete'),
+    path('tasks/project/<int:project_id>/', 
+         TaskListByProjectView.as_view(), name='task-list-by-project'),
     # ProjectIssues URLs
     path('project-issues/', ProjectIssuesListView.as_view(), name='project-issues-list'),
     path('project-issues/create/', ProjectIssuesCreateView.as_view(), name='project-issues-create'),

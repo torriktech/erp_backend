@@ -24,10 +24,19 @@ class Project(models.Model):
     status = models.CharField(max_length=20,
                               choices=STATUS_CHOICES,
                               default='pending')
-    manager = models.ForeignKey(
-        CustomUser,
+    client = models.ForeignKey(
+        Client,
         on_delete=models.CASCADE,
-        related_name="managed_projects"
+        related_name="projects",
+        null=True,
+        blank=True
+    )
+    contractor = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE, 
+        related_name="contractor_projects",
+        null=True,
+        blank=True
     )
     document = CloudinaryField('document', resource_type='raw', blank=True, null=True)
     working_time = models.DateTimeField(auto_now_add=True)
@@ -87,7 +96,7 @@ class Details(models.Model):
         models (_type_): details model
     """
     id = models.AutoField(primary_key=True)
-    projectId = models.ForeignKey(
+    project_id = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
         related_name="details"
@@ -101,11 +110,6 @@ class Details(models.Model):
         CustomUser,
         on_delete=models.CASCADE, 
         related_name="project_head"
-    )
-    contractor = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE, 
-        related_name="contractor_projects"
     )
     sub_project = models.ForeignKey(
         Project,
@@ -121,15 +125,13 @@ class Details(models.Model):
         blank=True, 
         null=True
     )
-    client = models.ForeignKey(
-        Client,
-        on_delete=models.CASCADE,
-        related_name="projects"
-    )
+    
     boq = models.ForeignKey(
         "bill_of_quantity.BillOfQuantity",
         on_delete=models.CASCADE,
-        related_name="details"
+        related_name="details",
+        blank=True, 
+        null=True,
     )
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -145,7 +147,7 @@ class Task(models.Model):
     material_requisition = models.CharField(max_length=150)
     material_consumed = models.CharField(max_length=150)
     material_planning = models.CharField(max_length=150)
-    projectId = models.ForeignKey(
+    project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
         related_name='project'
@@ -163,7 +165,7 @@ class Task(models.Model):
 
     def __str__(self):
         return f'Task: {self.name}'
-
+    
 
 class ProjectIssues(models.Model):
     """Task Issues

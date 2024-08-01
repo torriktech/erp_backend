@@ -125,6 +125,17 @@ class DetailsDeleteView(generics.DestroyAPIView):
     serializer_class = DetailsSerializer
 
 
+class DetailsListByProjectView(generics.ListAPIView):
+    """
+    View to list details based on project ID.
+    """
+    serializer_class = DetailsSerializer
+
+    def get_queryset(self):
+        project_id = self.kwargs['project_id']
+        return Details.objects.filter(project_id=project_id)
+
+
 # Task Views
 class TaskListView(generics.ListAPIView):
     """
@@ -165,6 +176,17 @@ class TaskDeleteView(generics.DestroyAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+
+class TaskListByProjectView(generics.ListAPIView):
+    """
+    View to list tasks based on project ID.
+    """
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        project_id = self.kwargs['project_id']
+        return Task.objects.filter(project=project_id)
+    
 
 # ProjectIssues Views
 class ProjectIssuesListView(generics.ListAPIView):

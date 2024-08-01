@@ -51,7 +51,7 @@ class ProjectSerializer(serializers.ModelSerializer):
     details = DetailsSerializer(many=True, read_only=True)
     project = TaskSerializer(many=True, read_only=True)
     timesheets = ProjectIssuesSerializer(many=True, read_only=True)
-    manager = serializers.StringRelatedField()
+    # manager = serializers.StringRelatedField()
 
     class Meta:
         """additional data class"""

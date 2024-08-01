@@ -10,9 +10,17 @@ class Department(models.Model):
     hod = models.ForeignKey(
         'auths.CustomUser',
         on_delete=models.CASCADE,
-        related_name="department_head")
-
-
+        related_name="department_head",
+        null=True,
+        blank=True)
+    company = models.ForeignKey(
+        'auths.CustomUser',
+        on_delete=models.CASCADE,
+        related_name="company",
+        null=True,
+        blank=True)
+    
+    
 class Position(models.Model):
     """position model"""
     title = models.CharField(max_length=255)
@@ -20,6 +28,3 @@ class Position(models.Model):
 
     def __str__(self):
         return self.title
-
-
-
