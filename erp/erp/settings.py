@@ -25,6 +25,7 @@ cloudinary.config(
     api_key=os.environ.get('CLOUDINARY_API_KEY', default=''),
     api_secret=os.environ.get('CLOUDINARY_SECRET', default="")
 )
+ENVIROMENT = os.environ.get('ENVIROMENT', default='development')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,6 +79,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -142,19 +144,23 @@ WSGI_APPLICATION = 'erp.wsgi.application'
 #     }
 # }
 
-DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': os.environ.get('DB_NAME', default=''),
-       'USER': os.environ.get('DB_USER', default=''),
-       'PASSWORD': os.environ.get('DB_USER', default=''),
-       'HOST': os.environ.get('DB_HOST', default='localhost'),
-       'PORT':  os.environ.get('DB_PORT', default=5432),
-   }
-}  
-# DB_HOST
-# DATABASE_URL="postgresql://apple:@localhost:5432/asher_test?schema=public"
-
+if ENVIROMENT == "development":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME', default=''),
+            'USER': os.environ.get('DB_USER', default=''),
+            'PASSWORD': os.environ.get('DB_USER', default=''),
+            'HOST': os.environ.get('DB_HOST', default='localhost'),
+            'PORT':  os.environ.get('DB_PORT', default=5432),
+        }
+    }
+else:
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+    }
+   
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
