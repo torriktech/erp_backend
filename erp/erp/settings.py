@@ -40,7 +40,12 @@ SECRET_KEY = 'django-insecure-qpts*k^b1-&qfqg$qxr0_=igm5&b$id*0(d951ppg=_5nz$6yg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['erp-backend-nv09.onrender.com', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    'erp-backend-nv09.onrender.com',
+    'https://enterprise-resource-planning-system.vercel.app/',
+    '127.0.0.1',
+    'localhost'
+]
 
 
 # Application definition
