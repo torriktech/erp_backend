@@ -1,8 +1,8 @@
 # serializer
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from departments.serializers import DepartmentSerializer
 from .models import CustomUser, CompanyProfile, Employee
-
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -108,7 +108,14 @@ class EmployeeProfileSerializer(serializers.ModelSerializer):
         """
         user_data = validated_data.pop('user')
         request = self.context.get('request')
-        company = request.user.company_profile
+        if not request.user.is_company:
+            raise ValidationError("Only users with a company profile can create employees.")
+        
+        # Ensure the company profile exists for the user
+        try:
+            company_profile = request.user.company_profile
+        except CompanyProfile.DoesNotExist:
+            raise ValidationError("User does not have an associated company profile.")
 
         user = CustomUserSerializer.create(
             CustomUserSerializer(),
@@ -116,7 +123,9 @@ class EmployeeProfileSerializer(serializers.ModelSerializer):
         )
         employee_profile = Employee.objects.create(
             user=user,
-            company=company,
+            company=company_profile,
             **validated_data
         )
         return employee_profile
+
+
