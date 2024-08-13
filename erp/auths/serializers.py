@@ -87,6 +87,15 @@ class EmployeeProfileSerializer(serializers.ModelSerializer):
         model = Employee
         fields = "__all__"
 
+    # def create(self, validated_data):
+        
+    #     user_data = validated_data.pop('user')
+    #     user = CustomUserSerializer.create(
+    #         CustomUserSerializer(), validated_data=user_data)
+    #     employee_profile = Employee.objects.create(
+    #         user=user, **validated_data)
+    #     return employee_profile
+
     def create(self, validated_data):
         """
         Create a new Employee with a nested user.
@@ -98,8 +107,16 @@ class EmployeeProfileSerializer(serializers.ModelSerializer):
             Employee: The created employee instance.
         """
         user_data = validated_data.pop('user')
+        request = self.context.get('request')
+        company = request.user.company_profile
+
         user = CustomUserSerializer.create(
-            CustomUserSerializer(), validated_data=user_data)
+            CustomUserSerializer(),
+            validated_data=user_data
+        )
         employee_profile = Employee.objects.create(
-            user=user, **validated_data)
+            user=user,
+            company=company,
+            **validated_data
+        )
         return employee_profile

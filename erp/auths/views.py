@@ -33,6 +33,11 @@ class EmployeeRegistrationView(generics.CreateAPIView):
     serializer_class = EmployeeProfileSerializer
     permission_classes = [permissions.AllowAny]
 
+    def get_serializer_context(self):
+        """Passes request to serializer context"""
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 class EmployeeProfileView(generics.RetrieveUpdateAPIView):
     """employee profile"""
