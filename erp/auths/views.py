@@ -48,7 +48,15 @@ class EmployeeProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user.employee
-    
+
+
+class EmployeeListView(generics.ListAPIView):
+    """List all employees"""
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeProfileSerializer
+    permission_classes = [permissions.IsAuthenticated] 
+
+
 
 class CompanyProfileView(generics.RetrieveUpdateAPIView):
     """company profile"""
@@ -78,6 +86,13 @@ class CompanyEmployeeListView(generics.ListAPIView):
         return Employee.objects.filter(company=company_profile)
     
     
+class CompanyListView(generics.ListAPIView):
+    """List all companies"""
+    queryset = CompanyProfile.objects.all()
+    serializer_class = CompanyProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     """login user"""
     serializer_class = CustomUserSerializer

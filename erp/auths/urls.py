@@ -5,6 +5,8 @@ from .views import (
     EmployeeRegistrationView,
     EmployeeProfileView,
     CompanyEmployeeListView,
+    EmployeeListView,
+    CompanyListView,
     #     CustomTokenObtainPairView,
     LoginView,
     CompanyProfileView
@@ -23,4 +25,6 @@ urlpatterns = [
          name='company-employee-list'),
     path('profile/company/',
          CompanyProfileView.as_view(), name='company_profile'),
+    path('employees/', EmployeeListView.as_view(), name='employee-list'),
+    path('companies/', CompanyListView.as_view(), name='company-list'),
 ]
