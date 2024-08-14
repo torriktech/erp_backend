@@ -1,5 +1,6 @@
-from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, status
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -59,6 +60,24 @@ class CompanyProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user.company_profile
 
 
+class CompanyEmployeeListView(generics.ListAPIView):
+    """List all employees of the currently logged-in user's company"""
+    serializer_class = EmployeeProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        request = self.request
+        if not request.user.is_company:
+            raise ValidationError("Only company users can access this endpoint.")
+        
+        try:
+            company_profile = request.user.company_profile
+        except CompanyProfile.DoesNotExist:
+            raise ValidationError("User does not have an associated company profile.")
+        
+        return Employee.objects.filter(company=company_profile)
+    
+    
 class CustomTokenObtainPairView(TokenObtainPairView):
     """login user"""
     serializer_class = CustomUserSerializer

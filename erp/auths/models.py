@@ -60,6 +60,7 @@ class Employee(models.Model):
     company = models.ForeignKey(
         "CompanyProfile",
         on_delete=models.CASCADE,
-        related_name='employees'
+        related_name='employees',
+        null=True
     )
     

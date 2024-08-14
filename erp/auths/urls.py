@@ -4,6 +4,7 @@ from .views import (
     CompanyRegistrationView,
     EmployeeRegistrationView,
     EmployeeProfileView,
+    CompanyEmployeeListView,
     #     CustomTokenObtainPairView,
     LoginView,
     CompanyProfileView
@@ -18,6 +19,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('profile/employee/',
          EmployeeProfileView.as_view(), name='employee_profile'),
+    path('company/employees/', CompanyEmployeeListView.as_view(),
+         name='company-employee-list'),
     path('profile/company/',
          CompanyProfileView.as_view(), name='company_profile'),
 ]
