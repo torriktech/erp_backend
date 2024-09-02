@@ -28,3 +28,5 @@ urlpatterns = [
     path('employees/', EmployeeListView.as_view(), name='employee-list'),
     path('companies/', CompanyListView.as_view(), name='company-list'),
 ]
+
+
