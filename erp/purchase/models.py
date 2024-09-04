@@ -30,8 +30,10 @@ class Requisition(models.Model):
     item_id = models.ForeignKey(
         "items.Item",
         on_delete=models.CASCADE,
-        related_name="requisitions"
+        related_name="requisitions",
+        blank=True,
     )
+    complain = models.CharField(max_length=255, blank=True, null=True),
     requested_by = models.ForeignKey(
         "auths.Employee",
         on_delete=models.CASCADE,
