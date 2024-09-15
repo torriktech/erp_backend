@@ -3,25 +3,26 @@ from django.urls import path
 from .views import (
     RequisitionCreateView,
     RequisitionApproveView,
-    PurchaseOrderListView,
-    RequisitionItemCreateView,
-    RequisitionItemListView
+    PurchaseOrderDetailView,
+    PurchaseOrderListCreateView,
+    PurchaseOrderListCreateView,
+    RequisitionListView,
+    RequisitionDetailView
 )
 
+
 urlpatterns = [
+    path('purchase-orders/', PurchaseOrderListCreateView.as_view(),
+         name='purchase-order-list-create'),
+    path('purchase-orders/<int:pk>/',
+         PurchaseOrderDetailView.as_view(), name='purchase-order-detail'),
+    path('requisitions/list/', RequisitionListView.as_view(), name='requisition-list'),
     path('requisitions/',
          RequisitionCreateView.as_view(),
          name='requisition-create'),
     path('requisitions/<int:requisition_id>/approve/',
          RequisitionApproveView.as_view(),
          name='requisition-approve'),
-    path('purchase-orders/',
-         PurchaseOrderListView.as_view(),
-         name='purchase-order-list'),
-    path('requisition-items/',
-         RequisitionItemCreateView.as_view(),
-         name='requisition-item-create'),
-    path('requisition-items/list/',
-         RequisitionItemListView.as_view(),
-         name='requisition-item-list'),
+    path('requisition/<int:id>/', RequisitionDetailView.as_view(),
+         name='requisition-detail'),
 ]

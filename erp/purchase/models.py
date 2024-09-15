@@ -27,13 +27,7 @@ class Requisition(models.Model):
         on_delete=models.CASCADE,
         related_name="requisitions"
     )
-    item_id = models.ForeignKey(
-        "items.Item",
-        on_delete=models.CASCADE,
-        related_name="requisitions",
-        blank=True,
-    )
-    complain = models.CharField(max_length=255, blank=True, null=True),
+    complain = models.CharField(max_length=255, blank=True, null=True)
     requested_by = models.ForeignKey(
         "auths.Employee",
         on_delete=models.CASCADE,
@@ -52,6 +46,28 @@ class Requisition(models.Model):
     def __str__(self):
         return f'Requisition {self.id} for Project {self.project}'
     
+class RequisitionItem(models.Model):
+    """Requisition Item model schema"""
+    id = models.AutoField(primary_key=True)
+    requisition = models.ForeignKey(
+        Requisition,
+        on_delete=models.CASCADE,
+        related_name="items"
+    )
+    
+    item = models.ForeignKey(
+        "items.Item",
+        on_delete=models.CASCADE,
+        related_name="requisition_items"
+    )
+    
+    quantity = models.IntegerField()
+    price = models.FloatField()
+
+    def __str__(self):
+        return f'Item {self.item.name} for Requisition {self.requisition}'
+
+
 
 class PurchaseOrder(models.Model):
     """Purchase Order model schema"""
@@ -77,24 +93,6 @@ class PurchaseOrder(models.Model):
         return f'Purchase Order {self.id} for Requisition {self.requisition}'
 
 
-class RequisitionItem(models.Model):
-    """Requisition Item model schema"""
-    id = models.AutoField(primary_key=True)
-    requisition = models.ForeignKey(
-        Requisition,
-        on_delete=models.CASCADE,
-        related_name="items"
-    )
-    item = models.ForeignKey(
-        "items.Item",
-        on_delete=models.CASCADE,
-        related_name="requisition_items"
-    )
-    quantity = models.IntegerField()
-    price = models.FloatField()
-
-    def __str__(self):
-        return f'Item {self.item.name} for Requisition {self.requisition}'
 
 # class Invoice(models.Model):
 #     """
