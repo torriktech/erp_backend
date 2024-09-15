@@ -18,7 +18,7 @@ from .views import (
 urlpatterns = [
     # Appraisal URLs
     path('appraisals/', AppraisalCreateView.as_view(), name='appraisal-create'),
-    path('appraisals/', AppraisalListView.as_view(), name='appraisal-list'),
+    path('appraisals/list/', AppraisalListView.as_view(), name='appraisal-list'),
     path('appraisals/<int:pk>/',
          AppraisalRetrieveView.as_view(), name='appraisal-retrieve'),
     path('appraisals/<int:pk>/',
