@@ -23,7 +23,7 @@ class RequisitionSerializer(serializers.ModelSerializer):
     project = serializers.PrimaryKeyRelatedField(
         queryset=Project.objects.all())
     requested_by = serializers.PrimaryKeyRelatedField(
-        queryset=Employee.objects.all())
+        queryset=Employee.objects.all(), required=False)
     approve_by = serializers.PrimaryKeyRelatedField(
         queryset=Employee.objects.all(), required=False)
 
@@ -33,6 +33,19 @@ class RequisitionSerializer(serializers.ModelSerializer):
                   'schedule_date', 'approval_status', 'task', 'approve_by', 'items']
 
     def create(self, validated_data):
+        # Remove `requested_by` from the data if it exists
+        validated_data.pop('requested_by', None)
+        
+        # Get the currently logged-in user from the request context
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            try:
+                employee = request.user.employee
+                validated_data['requested_by'] = employee
+            except Employee.DoesNotExist:
+                raise serializers.ValidationError("Logged-in user is not associated with an employee record.")
+
+
         items_data = validated_data.pop('items', [])
         # Create the requisition object
         requisition = Requisition.objects.create(**validated_data)

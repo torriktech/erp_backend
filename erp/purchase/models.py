@@ -16,7 +16,6 @@ STATUS_CHOICES = [
 
 class Requisition(models.Model):
     """Requisition model schema
-
     Args:
         models (_type_): requisition model
     """
@@ -40,12 +39,15 @@ class Requisition(models.Model):
     approve_by = models.ForeignKey(
         "auths.Employee",
         on_delete=models.CASCADE,
-        related_name="emp_app_requisitions"
+        related_name="emp_app_requisitions",
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
         return f'Requisition {self.id} for Project {self.project}'
-    
+
+
 class RequisitionItem(models.Model):
     """Requisition Item model schema"""
     id = models.AutoField(primary_key=True)

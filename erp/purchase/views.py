@@ -1,7 +1,8 @@
 # views
-from rest_framework import generics, status
+from rest_framework import generics, status, serializers
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 from .models import Requisition, PurchaseOrder
 from .serializers import (
     RequisitionSerializer,
@@ -9,6 +10,7 @@ from .serializers import (
     # RequisitionItemSerializer
 )
 from django.shortcuts import get_object_or_404
+from auths.models import Employee
 
 
 class PurchaseOrderListCreateView(APIView):
@@ -54,10 +56,16 @@ class PurchaseOrderDetailView(APIView):
         
         order.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
 class RequisitionCreateView(generics.CreateAPIView):
     queryset = Requisition.objects.all()
     serializer_class = RequisitionSerializer
+    permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        # Pass the request context to the serializer
+        serializer.save()
 
 class RequisitionApproveView(APIView):
 
