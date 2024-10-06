@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'bill_of_quantity',
     'sites',
     'items',
+    'cashbook',
     'departments',
     'supplier',
     'category',
