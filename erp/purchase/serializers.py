@@ -44,7 +44,8 @@ class RequisitionSerializer(serializers.ModelSerializer):
                 validated_data['requested_by'] = employee
             except Employee.DoesNotExist:
                 raise serializers.ValidationError("Logged-in user is not associated with an employee record.")
-
+        else:
+            raise serializers.ValidationError("kindly login")
 
         items_data = validated_data.pop('items', [])
         # Create the requisition object
